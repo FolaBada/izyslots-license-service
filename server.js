@@ -24,10 +24,104 @@ let latestRevenue = {
 };
 
 app.get('/', (req, res) => {
-    res.json({
-        status: true,
-        message: 'IzySlots license service is running'
-    });
+    res.send(`
+        <!DOCTYPE html>
+        <html>
+        <head>
+            <title>IzySlots Revenue Monitor</title>
+            <style>
+                body {
+                    font-family: Arial, sans-serif;
+                    background: #0f0f14;
+                    color: #fff;
+                    padding: 40px;
+                }
+
+                .container {
+                    max-width: 900px;
+                    margin: auto;
+                }
+
+                h1 {
+                    color: #a855f7;
+                    margin-bottom: 10px;
+                }
+
+                .status {
+                    margin-bottom: 30px;
+                    color: #22c55e;
+                }
+
+                .grid {
+                    display: grid;
+                    grid-template-columns: repeat(4, 1fr);
+                    gap: 20px;
+                }
+
+                .card {
+                    background: #1c1b24;
+                    padding: 25px;
+                    border-radius: 14px;
+                    border: 1px solid #333;
+                    box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+                }
+
+                .label {
+                    color: #aaa;
+                    font-size: 14px;
+                    margin-bottom: 10px;
+                }
+
+                .value {
+                    font-size: 28px;
+                    font-weight: bold;
+                }
+
+                .profit {
+                    color: ${latestRevenue.profit >= 0 ? '#22c55e' : '#ef4444'};
+                }
+
+                .updated {
+                    margin-top: 30px;
+                    color: #888;
+                    font-size: 14px;
+                }
+            </style>
+        </head>
+        <body>
+            <div class="container">
+                <h1>IzySlots Revenue Monitor</h1>
+                <div class="status">License service is running</div>
+
+                <div class="grid">
+                    <div class="card">
+                        <div class="label">Total Bets</div>
+                        <div class="value">${latestRevenue.totalBets}</div>
+                    </div>
+
+                    <div class="card">
+                        <div class="label">Total Winnings</div>
+                        <div class="value">${latestRevenue.totalWinnings}</div>
+                    </div>
+
+                    <div class="card">
+                        <div class="label">Total Refunds</div>
+                        <div class="value">${latestRevenue.totalRefunds}</div>
+                    </div>
+
+                    <div class="card">
+                        <div class="label">Profit</div>
+                        <div class="value profit">${latestRevenue.profit}</div>
+                    </div>
+                </div>
+
+                <div class="updated">
+                    Last updated: ${latestRevenue.updatedAt || 'No revenue synced yet'}
+                </div>
+            </div>
+        </body>
+        </html>
+    `);
 });
 
 app.get('/healthz', (req, res) => {
